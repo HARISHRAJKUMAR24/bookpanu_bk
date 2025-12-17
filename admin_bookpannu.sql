@@ -1,0 +1,1119 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Dec 17, 2025 at 10:02 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `admin_bookpannu`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `appointments`
+--
+
+CREATE TABLE `appointments` (
+  `id` int(11) NOT NULL,
+  `appointment_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `customer_id` int(11) DEFAULT NULL,
+  `service_id` int(11) NOT NULL,
+  `employee_id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `date` datetime(3) NOT NULL,
+  `time` varchar(255) NOT NULL,
+  `amount` varchar(255) NOT NULL,
+  `charges` varchar(255) NOT NULL,
+  `gst_amount` varchar(255) DEFAULT NULL,
+  `total_amount` varchar(255) NOT NULL,
+  `gst_number` varchar(191) DEFAULT NULL,
+  `gst_type` varchar(191) DEFAULT NULL,
+  `gst_percentage` int(11) DEFAULT NULL,
+  `payment_method` varchar(255) NOT NULL,
+  `payment_id` varchar(255) DEFAULT NULL,
+  `employee_commission` varchar(191) DEFAULT NULL,
+  `area` varchar(255) NOT NULL,
+  `postalCode` varchar(255) NOT NULL,
+  `address` text NOT NULL,
+  `remark` text DEFAULT NULL,
+  `status` varchar(255) NOT NULL,
+  `paymentStatus` varchar(255) NOT NULL,
+  `paidAt` datetime(3) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `available_areas`
+--
+
+CREATE TABLE `available_areas` (
+  `id` int(11) NOT NULL,
+  `area_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `area` varchar(255) NOT NULL,
+  `charges` varchar(255) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `category_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `meta_title` varchar(255) DEFAULT NULL,
+  `meta_description` varchar(255) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`id`, `category_id`, `user_id`, `name`, `slug`, `image`, `meta_title`, `meta_description`, `created_at`) VALUES
+(9, 'CAT_694144ddd81a3', 91393, 'nala thoil', 'mass23', 'sellers/91393/categories/2025/12/16/1765886152_694148c80076f.jpg', '', '', '2025-12-16 17:09:09.885');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `configured_plugins`
+--
+
+CREATE TABLE `configured_plugins` (
+  `id` int(11) NOT NULL,
+  `plugin_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `value` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `id` int(11) NOT NULL,
+  `coupon_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `discount_type` varchar(255) NOT NULL,
+  `discount` int(11) NOT NULL,
+  `start_date` datetime(3) NOT NULL,
+  `end_date` datetime(3) NOT NULL,
+  `usage_limit` int(11) DEFAULT NULL,
+  `min_booking_amount` int(11) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dashboard_messages`
+--
+
+CREATE TABLE `dashboard_messages` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `expiry_type` enum('hours','days','weeks','months') DEFAULT 'hours',
+  `expiry_value` int(11) NOT NULL,
+  `expiry_date` datetime NOT NULL,
+  `seller_type` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`seller_type`)),
+  `just_created_seller` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dashboard_messages`
+--
+
+INSERT INTO `dashboard_messages` (`id`, `title`, `description`, `expiry_type`, `expiry_value`, `expiry_date`, `seller_type`, `just_created_seller`, `created_at`, `updated_at`) VALUES
+(76, 'Time Now 3:54 pm ', 'Time Now 3:54 pm ', 'hours', 1, '2025-12-01 11:24:55', NULL, 1, '2025-12-01 10:24:55', '2025-12-01 10:24:55'),
+(78, 'Date 1-12-2025 Time Now 3:58 pm ', 'Date 1-12-2025 Time Now 3:58 pm ', 'days', 1, '2025-12-02 10:28:32', NULL, 0, '2025-12-01 10:28:32', '2025-12-01 10:28:32'),
+(79, 'Date 1-12-2025 Time Now 3:59 pm ', 'Date 1-12-2025 Time Now 3:59 pm ', 'weeks', 1, '2025-12-08 10:29:01', NULL, 0, '2025-12-01 10:29:01', '2025-12-01 10:29:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `discounts`
+--
+
+CREATE TABLE `discounts` (
+  `id` int(11) NOT NULL,
+  `code` varchar(191) NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `discount` int(11) NOT NULL,
+  `eligibility` int(11) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `discounts`
+--
+
+INSERT INTO `discounts` (`id`, `code`, `type`, `discount`, `eligibility`, `created_at`) VALUES
+(12, '123', 'percentage', 10, NULL, '2025-12-09 11:01:18.084'),
+(13, '456', 'fixed', 10, 8, '2025-12-09 11:30:58.539');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employees`
+--
+
+CREATE TABLE `employees` (
+  `id` int(11) NOT NULL,
+  `employee_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `position` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `joining_date` date DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `employees`
+--
+
+INSERT INTO `employees` (`id`, `employee_id`, `user_id`, `name`, `position`, `email`, `phone`, `address`, `joining_date`, `image`, `created_at`) VALUES
+(11, '13d0b71f-a1d9-4ae1-b0c1-47ddc554769f', 91393, 'Harish Mama', 'Captian', 'harish@gmail.com', '+919988774477', '4/44 kadai theru rediplayam', '2025-12-16', '/uploads/sellers/91393/employees/2025/12/16/emp_6941454aa43c0.jpg', '2025-12-16 17:10:59.702');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `events`
+--
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `date` date DEFAULT NULL,
+  `start_time` varchar(50) DEFAULT NULL,
+  `end_time` varchar(50) DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `organizer` varchar(255) DEFAULT NULL,
+  `category` varchar(255) DEFAULT NULL,
+  `banner` varchar(255) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `pincode` varchar(20) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `map_link` varchar(500) DEFAULT NULL,
+  `comfort` varchar(255) DEFAULT NULL,
+  `things_to_know` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`things_to_know`)),
+  `terms` text DEFAULT NULL,
+  `videos` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`videos`)),
+  `seat_layout` varchar(255) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_seat_layouts`
+--
+
+CREATE TABLE `event_seat_layouts` (
+  `id` int(11) NOT NULL,
+  `event_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `layout_json` longtext NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `managers`
+--
+
+CREATE TABLE `managers` (
+  `id` int(11) NOT NULL,
+  `manager_id` int(11) NOT NULL,
+  `name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `password` varchar(191) NOT NULL,
+  `image` varchar(191) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `role` varchar(191) NOT NULL DEFAULT 'staff'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `managers`
+--
+
+INSERT INTO `managers` (`id`, `manager_id`, `name`, `email`, `password`, `image`, `created_at`, `role`) VALUES
+(1, 123, 'Harish', 'admin@demo.com', '$2y$10$e2dZtcN/.C1jekx25lRGu.P/Hz0LqxBOpkxgFImwxhFwYrEdAZKB6', 'managers/6932cda0557ae.jpg', '2024-11-14 06:43:53.000', 'admin'),
+(5, 6917, '', 'admin@ztorespot.com', '$2y$10$gQ4ofBHlmsg8YaJ0fL.hrujcJcA36pHZUuN3K6PsyTThO1FXinoyG', 'static/user.png', '2025-12-01 16:14:45.922', 'staff');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `manual_payment_methods`
+--
+
+CREATE TABLE `manual_payment_methods` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `icon` varchar(255) DEFAULT NULL,
+  `instructions` longtext NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `plugins`
+--
+
+CREATE TABLE `plugins` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `description` varchar(255) NOT NULL,
+  `icon` varchar(255) NOT NULL,
+  `field_label` varchar(255) NOT NULL,
+  `field_placeholder` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `services`
+--
+
+CREATE TABLE `services` (
+  `id` int(11) NOT NULL,
+  `service_id` varchar(255) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `amount` varchar(255) NOT NULL,
+  `previous_amount` varchar(255) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `category_id` int(11) DEFAULT NULL,
+  `time_slot_interval` varchar(255) NOT NULL,
+  `interval_type` varchar(255) NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `gst_percentage` int(11) DEFAULT NULL,
+  `meta_title` varchar(255) DEFAULT NULL,
+  `meta_description` varchar(255) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `services`
+--
+
+INSERT INTO `services` (`id`, `service_id`, `user_id`, `name`, `slug`, `amount`, `previous_amount`, `image`, `category_id`, `time_slot_interval`, `interval_type`, `description`, `gst_percentage`, `meta_title`, `meta_description`, `status`, `created_at`) VALUES
+(1, 'SRV_693a930157c43', 52064, 'fdg', 'fdg', '34', '43', 'http://localhost/managerbp/public/uploads/sellers/sellers/52064/services/2025/12/11/srv_693a92bb4b9b0.png', NULL, '2', 'minutes', NULL, NULL, NULL, NULL, 0, '2025-12-11 15:16:41.360'),
+(2, 'SRV_693aaca95cf2d', 52064, 'dfg', 'fg', '33', '44', '/uploads/sellers/52064/services/2025/12/11/srv_693ab205bc44c.png', 0, '2', 'minutes', 'sdf', NULL, '', '', 0, '2025-12-11 17:06:09.381'),
+(3, 'SRV_693ab1e9f048d', 52064, 'sdf', 'sdf', '2', '2', '/uploads/sellers/52064/services/2025/12/11/srv_693ab6be40a17.png', 0, '2', 'minutes', '', NULL, '', '', 0, '2025-12-11 17:28:33.984'),
+(4, 'SRV_693badb007345', 50339, 'Developer', 'dev', '255', '400', '/uploads/sellers/50339/services/2025/12/12/srv_693bad9252174.png', 2, '2', 'minutes', NULL, NULL, NULL, NULL, 0, '2025-12-12 11:22:48.029'),
+(5, 'SRV_694113c1f10ae', 85698, 'sdf', 'sdf', '33', '44', '/uploads/sellers/85698/services/2025/12/16/srv_694113ced92b6.webp', 7, '2', 'minutes', '', NULL, '', '', 0, '2025-12-16 13:39:37.987'),
+(6, 'SRV_69414441eaea0', 91393, 'Good', '1111', '111', '', '/uploads/sellers/91393/services/2025/12/16/srv_6941445090eac.jpg', 0, '11', 'minutes', '11', NULL, '', '', 0, '2025-12-16 17:06:33.966');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `service_images`
+--
+
+CREATE TABLE `service_images` (
+  `id` int(11) NOT NULL,
+  `service_id` int(11) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `service_images`
+--
+
+INSERT INTO `service_images` (`id`, `service_id`, `image`, `created_at`) VALUES
+(48, 1, 'http://localhost/managerbp/public/uploads/sellers/sellers/52064/services/additional/2025/12/11/add_693a92c081d08.png', '2025-12-11 15:16:41.383'),
+(52, 2, '/uploads/sellers/52064/services/additional/2025/12/11/add_693aac7a9af47.png', '2025-12-11 17:29:03.367'),
+(53, 2, '/uploads/sellers/52064/services/additional/2025/12/11/add_693aac7a9bb36.webp', '2025-12-11 17:29:03.374'),
+(58, 3, '/uploads/sellers/52064/services/additional/2025/12/11/add_693aae255eb6f.webp', '2025-12-11 18:12:17.711'),
+(59, 3, '/uploads/sellers/52064/services/additional/2025/12/11/add_693abc27d69e8.webp', '2025-12-11 18:12:17.714'),
+(60, 4, '/uploads/sellers/50339/services/additional/2025/12/12/add_693bad974b399.png', '2025-12-12 11:22:48.031'),
+(61, 4, '/uploads/sellers/50339/services/additional/2025/12/12/add_693bad974b57f.webp', '2025-12-12 11:22:48.031'),
+(66, 5, '/uploads/sellers/85698/services/additional/2025/12/16/add_694130950b756.webp', '2025-12-16 15:42:38.429'),
+(67, 5, '/uploads/sellers/85698/services/additional/2025/12/16/add_694130950c350.webp', '2025-12-16 15:42:38.433');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `settings`
+--
+
+CREATE TABLE `settings` (
+  `id` int(11) NOT NULL,
+  `app_name` varchar(191) NOT NULL,
+  `currency` varchar(191) NOT NULL,
+  `gst_tax_type` varchar(255) DEFAULT NULL,
+  `gst_number` varchar(255) DEFAULT NULL,
+  `gst_percentage` int(11) NOT NULL DEFAULT 0,
+  `favicon` varchar(255) NOT NULL,
+  `address` text DEFAULT NULL,
+  `logo` varchar(255) NOT NULL,
+  `disclaimer` text DEFAULT NULL,
+  `timezone` varchar(100) NOT NULL DEFAULT 'Asia/Kolkata',
+  `razorpay_key_id` varchar(255) DEFAULT NULL,
+  `razorpay_key_secret` varchar(255) DEFAULT NULL,
+  `ippopay_public_key` varchar(255) DEFAULT NULL,
+  `phonepe_key_merchant_id` varchar(255) DEFAULT NULL,
+  `phonepe_key_index` varchar(255) DEFAULT NULL,
+  `phonepe_key` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `settings`
+--
+
+INSERT INTO `settings` (`id`, `app_name`, `currency`, `gst_tax_type`, `gst_number`, `gst_percentage`, `favicon`, `address`, `logo`, `disclaimer`, `timezone`, `razorpay_key_id`, `razorpay_key_secret`, `ippopay_public_key`, `phonepe_key_merchant_id`, `phonepe_key_index`, `phonepe_key`) VALUES
+(1, 'Book Pannu', 'INR', 'exclusive', '33AACCZ2135N1Z8', 18, 'settings/6933b7691e08d.png', 'simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry', 'settings/6933b7691cc4a.png', 'simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it. ', 'America/New_York', 'rzp_test_RGZZjGF5vUiIUz', 'V8ToWLDw00mE6BtGNWoCxgwR', '', '', '', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `site_settings`
+--
+
+CREATE TABLE `site_settings` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `favicon` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) DEFAULT NULL,
+  `whatsapp` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) NOT NULL DEFAULT 'INR',
+  `country` varchar(255) DEFAULT NULL,
+  `state` varchar(255) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `meta_title` varchar(255) DEFAULT NULL,
+  `meta_description` text DEFAULT NULL,
+  `sharing_image_preview` varchar(255) DEFAULT NULL,
+  `gst_number` varchar(191) DEFAULT NULL,
+  `gst_type` varchar(191) DEFAULT NULL,
+  `tax_percent` decimal(5,2) DEFAULT NULL,
+  `facebook` varchar(255) DEFAULT NULL,
+  `twitter` varchar(255) DEFAULT NULL,
+  `instagram` varchar(255) DEFAULT NULL,
+  `linkedin` varchar(255) DEFAULT NULL,
+  `youtube` varchar(255) DEFAULT NULL,
+  `pinterest` varchar(255) DEFAULT NULL,
+  `cash_in_hand` tinyint(1) DEFAULT NULL,
+  `razorpay_key_id` varchar(255) DEFAULT NULL,
+  `phonepe_salt_key` varchar(255) DEFAULT NULL,
+  `phonepe_salt_index` varchar(255) DEFAULT NULL,
+  `phonepe_merchant_id` varchar(255) DEFAULT NULL,
+  `payu_api_key` varchar(255) DEFAULT NULL,
+  `payu_salt` varchar(255) DEFAULT NULL,
+  `sunday` tinyint(1) NOT NULL DEFAULT 0,
+  `sunday_starts` varchar(255) DEFAULT NULL,
+  `sunday_ends` varchar(255) DEFAULT NULL,
+  `monday` tinyint(1) NOT NULL DEFAULT 1,
+  `monday_starts` varchar(255) DEFAULT NULL,
+  `monday_ends` varchar(255) DEFAULT NULL,
+  `tuesday` tinyint(1) NOT NULL DEFAULT 1,
+  `tuesday_starts` varchar(255) DEFAULT NULL,
+  `tuesday_ends` varchar(255) DEFAULT NULL,
+  `wednesday` tinyint(1) NOT NULL DEFAULT 1,
+  `wednesday_starts` varchar(255) DEFAULT NULL,
+  `wednesday_ends` varchar(255) DEFAULT NULL,
+  `thursday` tinyint(1) NOT NULL DEFAULT 1,
+  `thursday_starts` varchar(255) DEFAULT NULL,
+  `thursday_ends` varchar(255) DEFAULT NULL,
+  `friday` tinyint(1) NOT NULL DEFAULT 1,
+  `friday_starts` varchar(255) DEFAULT NULL,
+  `friday_ends` varchar(255) DEFAULT NULL,
+  `saturday` tinyint(1) NOT NULL DEFAULT 0,
+  `saturday_starts` varchar(255) DEFAULT NULL,
+  `saturday_ends` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subscription_histories`
+--
+
+CREATE TABLE `subscription_histories` (
+  `id` int(11) NOT NULL,
+  `invoice_number` int(11) NOT NULL,
+  `plan_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `payment_method` varchar(191) NOT NULL,
+  `payment_id` varchar(191) NOT NULL,
+  `currency` varchar(191) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `gst_amount` int(11) DEFAULT NULL,
+  `gst_type` varchar(191) DEFAULT NULL,
+  `gst_number` varchar(191) DEFAULT NULL,
+  `gst_percentage` int(11) DEFAULT NULL,
+  `discount` int(11) DEFAULT NULL,
+  `name` varchar(191) NOT NULL,
+  `email` varchar(191) NOT NULL,
+  `phone` varchar(191) NOT NULL,
+  `address_1` varchar(191) NOT NULL,
+  `address_2` varchar(191) DEFAULT NULL,
+  `state` varchar(191) NOT NULL,
+  `city` varchar(191) NOT NULL,
+  `pin_code` varchar(191) NOT NULL,
+  `country` varchar(191) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `currency_symbol` varchar(10) DEFAULT '₹'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subscription_plans`
+--
+
+CREATE TABLE `subscription_plans` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `amount` int(11) NOT NULL,
+  `previous_amount` int(11) DEFAULT NULL,
+  `duration` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `feature_lists` longtext NOT NULL,
+  `appointments_limit` varchar(191) NOT NULL,
+  `events_limit` varchar(191) NOT NULL DEFAULT 'unlimited',
+  `customers_limit` varchar(191) NOT NULL,
+  `categories_limit` varchar(191) NOT NULL,
+  `services_limit` varchar(191) NOT NULL,
+  `coupons_limit` varchar(191) NOT NULL,
+  `manual_payment_methods_limit` varchar(191) NOT NULL,
+  `razorpay` tinyint(1) NOT NULL,
+  `phonepe` tinyint(1) NOT NULL,
+  `payu` tinyint(1) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `plan_id` varchar(255) NOT NULL,
+  `is_disabled` tinyint(1) NOT NULL DEFAULT 0,
+  `is_trial` tinyint(1) NOT NULL DEFAULT 0,
+  `gst_type` varchar(191) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `subscription_plans`
+--
+
+INSERT INTO `subscription_plans` (`id`, `name`, `amount`, `previous_amount`, `duration`, `description`, `feature_lists`, `appointments_limit`, `events_limit`, `customers_limit`, `categories_limit`, `services_limit`, `coupons_limit`, `manual_payment_methods_limit`, `razorpay`, `phonepe`, `payu`, `created_at`, `plan_id`, `is_disabled`, `is_trial`, `gst_type`) VALUES
+(1, 'Free Trial', 1, 0, 30, 'Start your dream online store for free for 3 days +GST\r\n\r\n', 'Appointments Limit - 2.,\r\nEvents Limit - 2.,\r\nCustomers Limit - 4.,\r\nCategories Limit - 2.,\r\nServices Limit - 2 .,\r\nCoupons Limit -2.,\r\nManual Pay - 2.', '2', '2', '4', '2', '2', '2', '2', 0, 0, 1, '2024-11-14 06:55:02.000', '65b9324d-7a3d-42f1-b4a9-50be0a4a2021', 1, 1, 'exclusive'),
+(4, 'Welcome', 169, 597, 180, 'Start your dream online store for Just ₹199/2 month with GST.\r\n', 'Appointments Limit - 4.,\r\nEvents Limit - 4.,\r\nCustomers Limit - 6.,\r\nCategories Limit - 4.,\r\nServices Limit - 4 .,\r\nCoupons Limit -4.,\r\nManual Pay - 4.', '4', '4', '6', '4', '4', '4', '4', 1, 0, 0, '2024-11-16 08:10:42.670', '91272600-4e06-6e9b-d015-f7ed634828c2', 1, 0, 'exclusive'),
+(5, 'Professional', 1695, 3499, 1095, 'Normal Plan 499/3months', 'Appointments Limit - 10.,\r\nEvents Limit - 10.,\r\nCustomers Limit - 15.,\r\nCategories Limit - 10.,\r\nServices Limit - 10.,\r\nCoupons Limit -10.,\r\nManual Pay - 10.', '10', '10', '15', '10', '10', '10', '10', 1, 0, 0, '2024-11-17 14:00:20.721', 'f8b5fc4c-8325-5380-8e99-3ac8f709c7a1', 1, 0, 'exclusive'),
+(8, 'Premium', 3389, 5599, 1095, 'mass da mama', 'Appointments Limit - unlimited.,\r\nEvents Limit - unlimited.,\r\nCustomers Limit - unlimited.,\r\nCategories Limit - unlimited.,\r\nServices Limit - unlimited.,\r\nCoupons Limit - unlimited.,\r\nManual Pay - unlimited.', 'unlimited', 'unlimited', 'unlimited', 'unlimited', 'unlimited', 'unlimited', 'unlimited', 1, 0, 0, '2025-12-03 11:38:37.639', 'b187cf4c-158c-11e0-15cc-b58e78e900d0', 1, 0, 'exclusive');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `phone` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `country` varchar(255) NOT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `site_name` varchar(255) NOT NULL,
+  `site_slug` varchar(255) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `customersId` int(11) DEFAULT NULL,
+  `expires_on` datetime(3) DEFAULT NULL,
+  `is_suspended` tinyint(1) NOT NULL DEFAULT 0,
+  `plan_id` int(11) DEFAULT NULL,
+  `api_token` varchar(150) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `user_id`, `name`, `email`, `phone`, `password`, `country`, `image`, `site_name`, `site_slug`, `created_at`, `customersId`, `expires_on`, `is_suspended`, `plan_id`, `api_token`) VALUES
+(19, 91393, 'Harish', 'harish@gmail.com', '8015021359', '$2y$10$doFv1w9BiB159O80sdC6O.zhxvANY.2UipG7aXt.Z7AxOTBTcAb.S', 'IN', NULL, 'Harish Mass', 'harish-mass', '2025-12-16 16:02:15.000', NULL, NULL, 0, NULL, 'c909f2e6db0f428843a235d133f21411966183e22fe23f821a586207969c869e');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `website_pages`
+--
+
+CREATE TABLE `website_pages` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `content` longtext DEFAULT NULL,
+  `page_id` varchar(255) NOT NULL,
+  `created_at` datetime(3) NOT NULL DEFAULT current_timestamp(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `website_settings`
+--
+
+CREATE TABLE `website_settings` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `hero_title` varchar(255) NOT NULL,
+  `hero_description` longtext NOT NULL,
+  `hero_image` varchar(255) NOT NULL,
+  `nav_links` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`nav_links`))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `_prisma_migrations`
+--
+
+CREATE TABLE `_prisma_migrations` (
+  `id` varchar(36) NOT NULL,
+  `checksum` varchar(64) NOT NULL,
+  `finished_at` datetime(3) DEFAULT NULL,
+  `migration_name` varchar(255) NOT NULL,
+  `logs` text DEFAULT NULL,
+  `rolled_back_at` datetime(3) DEFAULT NULL,
+  `started_at` datetime(3) NOT NULL DEFAULT current_timestamp(3),
+  `applied_steps_count` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `_prisma_migrations`
+--
+
+INSERT INTO `_prisma_migrations` (`id`, `checksum`, `finished_at`, `migration_name`, `logs`, `rolled_back_at`, `started_at`, `applied_steps_count`) VALUES
+('09244bc7-506b-455c-84fd-a906a560b7e2', 'e740a6dce962ce1da376938b97cc139bb7c1373f92eb3d2fa55abffb6d0430b7', '2024-11-14 00:39:00.943', '20241110090106_', NULL, NULL, '2024-11-14 00:39:00.941', 1),
+('1e529ef0-3622-410b-901b-6dd7ec109991', 'ab7f4882c05896de13a3a7767721fd0644a8279c9aaaeb4bfd4434556669edad', '2024-11-14 00:39:00.863', '20240908135704_', NULL, NULL, '2024-11-14 00:39:00.860', 1),
+('1e816e6d-cc27-47ef-a1aa-cad46c5545a7', '66c09bb1430897332e55daeae3efcb7b28b4119800044ad76f0ac5b287bb2bfd', '2024-11-14 00:39:00.922', '20241109013123_', NULL, NULL, '2024-11-14 00:39:00.920', 1),
+('26cb7145-4e9d-4794-8ad3-9f1ba02ffc6b', '38a8d7498e94fc36f6704adc8d3438651dca3fcc05aee48939a7de495ed9312d', '2024-11-14 00:39:00.919', '20241109002530_', NULL, NULL, '2024-11-14 00:39:00.917', 1),
+('36fbd5bf-b5f9-4418-9db5-bb39be2e18f3', '92c049148f580b6c55040337e08a139dc0e2c5d9225ea0efcd7e99970e03d50e', '2024-11-16 01:55:51.946', '20241116015551_', NULL, NULL, '2024-11-16 01:55:51.942', 1),
+('3af53457-9105-4962-8249-63d21199c88b', 'e20c2fd5db7f2ca0f40aaf3676785cc9705f20c10a6279a5c3b4d7f338e20fc5', '2024-11-14 00:39:00.823', '20240903102652_', NULL, NULL, '2024-11-14 00:39:00.806', 1),
+('488ba3a3-6b16-42d4-9a6e-4fb1aebcab1e', 'fa895d3cf47dbc13f91339500bf2fae07385d36de2f7ac16be737d6a1017b08b', '2024-11-14 00:39:00.897', '20240909075429_', NULL, NULL, '2024-11-14 00:39:00.865', 1),
+('6ce13c0d-76ec-447a-92b6-e09ddc06cf29', '250a30145becf1e36d2cd0d0ef7dbe8eb2b175b2fddcabeef23dab201d6611e2', '2024-11-17 04:38:18.124', '20241117043818_', NULL, NULL, '2024-11-17 04:38:18.107', 1),
+('70df7102-69b3-4ec9-a4a1-d9e7007cf68b', 'd301a6f7efb9fd5d6ac108722e169163132f8d8581665c4ac05835023b772bbc', '2024-11-16 04:39:55.395', '20241116043955_', NULL, NULL, '2024-11-16 04:39:55.366', 1),
+('712d0196-6b26-4395-916a-4b3d5451e13a', 'b13d506647675c8c5e7bb66a32c10f75e1dafb18f50898c38ff95d3febbfc738', '2024-11-14 00:39:00.901', '20240910001952_', NULL, NULL, '2024-11-14 00:39:00.897', 1),
+('75870991-11ef-477b-a90c-bad0b9d439b4', '603baf253f952d970c7770402c2890481977908dac72ad6efd6392a8ec48522b', '2024-11-14 00:39:00.915', '20240911112218_', NULL, NULL, '2024-11-14 00:39:00.901', 1),
+('8b735286-36a7-456b-8fa4-e49db9d6990a', '4a1113aae89840cd1f01b42936690065c9763f959c9b7c2eef64a44e479ac7ec', '2024-11-14 00:39:00.865', '20240909002158_', NULL, NULL, '2024-11-14 00:39:00.863', 1),
+('8ea421b3-e2df-4474-8834-18f9462d7422', 'a2077d8bf6f6f2527dcc6518cc076a21932ad0f92383553839d3372cf4cddacb', '2024-11-14 00:54:50.905', '20241114005450_', NULL, NULL, '2024-11-14 00:54:50.897', 1),
+('a1b001a8-fc30-4552-b346-0aebc53ce621', '2c155ccdae8f4ec4c2bcc7630207cd44128b11d48534efd8b118567ab2079e7a', '2024-11-16 02:38:58.707', '20241116023858_', NULL, NULL, '2024-11-16 02:38:58.686', 1),
+('a8a20513-3b9f-4e78-9602-5cd9ca7d6ad2', '27222a3c7e8eb9b359b71670fad0b93defbb82f2b44fb297ad3ac0203c1a0929', '2024-11-14 00:39:00.962', '20241114003815_', NULL, NULL, '2024-11-14 00:39:00.944', 1),
+('ac511439-b437-422b-9b45-19ac6f84fdd5', '2b8a851fa460c8a1ab2c7f591b2801d54d98e946f4712bda413633a0d1faabd7', '2024-11-14 00:39:00.941', '20241110085638_', NULL, NULL, '2024-11-14 00:39:00.932', 1),
+('ad312240-a04f-4259-a224-f1547ced7d11', '2f781ac3639ab9d76eba792a6fc537eef905813fab974cc491f5c6bb695315b5', '2024-11-14 00:39:00.806', '20240820102253_', NULL, NULL, '2024-11-14 00:39:00.485', 1),
+('bf88fe4c-baec-43fa-aebd-de7cac864130', '7a6c16d8ab0e0a8fb78e970c899d18d73f83ceba39a6953469636116f86607e6', '2024-11-14 00:39:00.859', '20240908135217_', NULL, NULL, '2024-11-14 00:39:00.839', 1),
+('cbdee804-d018-4a1a-97fb-b8ea1fb8b134', 'ca8fa5ab781c7d08cb200855d32e5dfb126c52ddffc7a512d80d879f82818094', '2024-11-14 00:39:00.917', '20240911112333_', NULL, NULL, '2024-11-14 00:39:00.915', 1),
+('d19f1886-b354-4ddd-bfe2-39d40721f6a3', '231c86e551593d49aac005ccaee17571eee422c4dfd5d9a84507575df268fede', '2024-11-14 01:47:26.891', '20241114014726_', NULL, NULL, '2024-11-14 01:47:26.885', 1),
+('e1e1ed63-cae3-4e21-957b-44489c3e575e', '3aa252b64a539d8f2512d545890170af65b3e1232ef53414bcc8801ddb5569d7', '2024-11-14 00:39:03.253', '20241114003903_', NULL, NULL, '2024-11-14 00:39:03.226', 1),
+('ea627bd5-8e2e-4f28-a460-3be5560a997e', 'c2eab32a876380cdd473e435f1f6320a6edce46f6ab2afed3c48f5a82f88b787', '2024-11-14 00:39:00.932', '20241109103135_', NULL, NULL, '2024-11-14 00:39:00.922', 1),
+('eeba9adb-85da-4811-bc58-9549e41e6c3c', 'd2a546b543750e4e54082cf7bf57955c5b56eb4c7488732e3fedeac053aa1935', '2024-11-14 00:39:00.839', '20240908134722_', NULL, NULL, '2024-11-14 00:39:00.823', 1);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `appointments_appointment_id_key` (`appointment_id`),
+  ADD KEY `appointments_user_id_fkey` (`user_id`),
+  ADD KEY `appointments_customer_id_fkey` (`customer_id`),
+  ADD KEY `appointments_service_id_fkey` (`service_id`),
+  ADD KEY `appointments_employee_id_fkey` (`employee_id`);
+
+--
+-- Indexes for table `available_areas`
+--
+ALTER TABLE `available_areas`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `available_areas_area_id_key` (`area_id`),
+  ADD KEY `available_areas_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `categories_category_id_key` (`category_id`),
+  ADD KEY `categories_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `configured_plugins`
+--
+ALTER TABLE `configured_plugins`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `configured_plugins_plugin_id_fkey` (`plugin_id`),
+  ADD KEY `configured_plugins_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `coupons_coupon_id_key` (`coupon_id`),
+  ADD KEY `coupons_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `customers_customer_id_key` (`customer_id`),
+  ADD KEY `customers_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `dashboard_messages`
+--
+ALTER TABLE `dashboard_messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `discounts`
+--
+ALTER TABLE `discounts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `discounts_eligibility_fkey` (`eligibility`);
+
+--
+-- Indexes for table `employees`
+--
+ALTER TABLE `employees`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `employees_employee_id_key` (`employee_id`),
+  ADD KEY `employees_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `events_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `event_seat_layouts`
+--
+ALTER TABLE `event_seat_layouts`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_event` (`event_id`);
+
+--
+-- Indexes for table `managers`
+--
+ALTER TABLE `managers`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `managers_manager_id_key` (`manager_id`);
+
+--
+-- Indexes for table `manual_payment_methods`
+--
+ALTER TABLE `manual_payment_methods`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `manual_payment_methods_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `plugins`
+--
+ALTER TABLE `plugins`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `services`
+--
+ALTER TABLE `services`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `service_id` (`service_id`);
+
+--
+-- Indexes for table `service_images`
+--
+ALTER TABLE `service_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `service_images_service_id_fkey` (`service_id`);
+
+--
+-- Indexes for table `settings`
+--
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `site_settings`
+--
+ALTER TABLE `site_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `site_settings_user_id_key` (`user_id`),
+  ADD UNIQUE KEY `site_settings_gst_number_key` (`gst_number`);
+
+--
+-- Indexes for table `subscription_histories`
+--
+ALTER TABLE `subscription_histories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `subscription_histories_plan_id_fkey` (`plan_id`),
+  ADD KEY `subscription_histories_user_id_fkey` (`user_id`);
+
+--
+-- Indexes for table `subscription_plans`
+--
+ALTER TABLE `subscription_plans`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `subscription_plans_plan_id_key` (`plan_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_user_id_key` (`user_id`),
+  ADD UNIQUE KEY `users_phone_key` (`phone`),
+  ADD UNIQUE KEY `users_site_name_key` (`site_name`),
+  ADD UNIQUE KEY `users_site_slug_key` (`site_slug`),
+  ADD UNIQUE KEY `users_email_key` (`email`),
+  ADD KEY `users_plan_id_fkey` (`plan_id`);
+
+--
+-- Indexes for table `website_pages`
+--
+ALTER TABLE `website_pages`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `website_pages_user_id_key` (`user_id`),
+  ADD UNIQUE KEY `website_pages_page_id_key` (`page_id`);
+
+--
+-- Indexes for table `website_settings`
+--
+ALTER TABLE `website_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `website_settings_user_id_key` (`user_id`);
+
+--
+-- Indexes for table `_prisma_migrations`
+--
+ALTER TABLE `_prisma_migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `appointments`
+--
+ALTER TABLE `appointments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `available_areas`
+--
+ALTER TABLE `available_areas`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `configured_plugins`
+--
+ALTER TABLE `configured_plugins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `dashboard_messages`
+--
+ALTER TABLE `dashboard_messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+
+--
+-- AUTO_INCREMENT for table `discounts`
+--
+ALTER TABLE `discounts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `employees`
+--
+ALTER TABLE `employees`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `event_seat_layouts`
+--
+ALTER TABLE `event_seat_layouts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `managers`
+--
+ALTER TABLE `managers`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `manual_payment_methods`
+--
+ALTER TABLE `manual_payment_methods`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `plugins`
+--
+ALTER TABLE `plugins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `services`
+--
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `service_images`
+--
+ALTER TABLE `service_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
+
+--
+-- AUTO_INCREMENT for table `settings`
+--
+ALTER TABLE `settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `site_settings`
+--
+ALTER TABLE `site_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `subscription_histories`
+--
+ALTER TABLE `subscription_histories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- AUTO_INCREMENT for table `subscription_plans`
+--
+ALTER TABLE `subscription_plans`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `website_pages`
+--
+ALTER TABLE `website_pages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `website_settings`
+--
+ALTER TABLE `website_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `appointments`
+--
+ALTER TABLE `appointments`
+  ADD CONSTRAINT `appointments_customer_id_fkey` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointments_employee_id_fkey` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointments_service_id_fkey` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `appointments_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `available_areas`
+--
+ALTER TABLE `available_areas`
+  ADD CONSTRAINT `available_areas_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `categories`
+--
+ALTER TABLE `categories`
+  ADD CONSTRAINT `categories_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `configured_plugins`
+--
+ALTER TABLE `configured_plugins`
+  ADD CONSTRAINT `configured_plugins_plugin_id_fkey` FOREIGN KEY (`plugin_id`) REFERENCES `plugins` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `configured_plugins_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD CONSTRAINT `coupons_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `customers`
+--
+ALTER TABLE `customers`
+  ADD CONSTRAINT `customers_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `discounts`
+--
+ALTER TABLE `discounts`
+  ADD CONSTRAINT `discounts_eligibility_fkey` FOREIGN KEY (`eligibility`) REFERENCES `subscription_plans` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `employees_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `events`
+--
+ALTER TABLE `events`
+  ADD CONSTRAINT `events_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `event_seat_layouts`
+--
+ALTER TABLE `event_seat_layouts`
+  ADD CONSTRAINT `fk_event_layout` FOREIGN KEY (`event_id`) REFERENCES `events` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `manual_payment_methods`
+--
+ALTER TABLE `manual_payment_methods`
+  ADD CONSTRAINT `manual_payment_methods_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `service_images`
+--
+ALTER TABLE `service_images`
+  ADD CONSTRAINT `service_images_service_id_fkey` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `site_settings`
+--
+ALTER TABLE `site_settings`
+  ADD CONSTRAINT `site_settings_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `subscription_histories`
+--
+ALTER TABLE `subscription_histories`
+  ADD CONSTRAINT `subscription_histories_plan_id_fkey` FOREIGN KEY (`plan_id`) REFERENCES `subscription_plans` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `subscription_histories_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_plan_id_fkey` FOREIGN KEY (`plan_id`) REFERENCES `subscription_plans` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `website_pages`
+--
+ALTER TABLE `website_pages`
+  ADD CONSTRAINT `website_pages_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+
+--
+-- Constraints for table `website_settings`
+--
+ALTER TABLE `website_settings`
+  ADD CONSTRAINT `website_settings_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
